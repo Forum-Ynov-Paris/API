@@ -1,8 +1,9 @@
 package main
 
 import (
-	"encoding/json"
-	"net/http"
+	"github.com/gofiber/fiber/v2"
+	"log"
+	"os"
 )
 
 type Message struct {
@@ -41,14 +42,22 @@ func main() {
 
 	Init()
 
-	http.HandleFunc("/Data", func(w http.ResponseWriter, r *http.Request) {
-		err := json.NewEncoder(w).Encode(Data)
-		if err != nil {
-			return
-		}
+	app := fiber.New()
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello, World 👋!")
 	})
 
-	//fmt.Println("localhost:8080")
-	//log.Fatal(http.ListenAndServe(":8080", nil))
+	app.Get("/data", func(c *fiber.Ctx) error {
+		return c.SendString("Hello data 👋!" + os.Getenv("DATA_ENV"))
+	})
+
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "3000"
+	}
+
+	log.Fatal(app.Listen("0.0.0.0" + port))
 
 }
