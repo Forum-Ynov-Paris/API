@@ -1,10 +1,13 @@
 package main
 
+//replace the package main by the name of your package and delete main function
+
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"net/http"
+	"io"
+	"log"
+	"os"
 )
 
 type Commentaire struct {
@@ -22,40 +25,12 @@ type Article struct {
 	Commentaire []Commentaire `json:"commentaire"`
 }
 
+var (
+	Path     = "./data.json"
+	articles []Article
+)
+
 func main() {
-	Get()
-	Post()
-	Get()
-}
-
-func Get() {
-	url := "https://forum-ynov-paris.github.io/API/data.json"
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		fmt.Println("Erreur lors de la création de la requête :", err)
-		return
-	}
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Println("Erreur lors de la requête :", err)
-		return
-	}
-	defer resp.Body.Close()
-
-	var articles []Article
-	err = json.NewDecoder(resp.Body).Decode(&articles)
-	if err != nil {
-		fmt.Println("Erreur lors de la lecture de la réponse :", err)
-		return
-	}
-
-	fmt.Println(articles[0].Tag)
-}
-
-func Post() {
-	url := "https://forum-ynov-paris.github.io/API/data.json"
 	article := Article{
 		Title:   "Nouvel article",
 		Tag:     "test",
@@ -69,27 +44,48 @@ func Post() {
 			{Content: "Commentaire 3", Uuid: "zxcvbn"},
 		},
 	}
+	//Get()
+	PostArticle(article)
+	//Get()
+}
 
-	articleJson, err := json.Marshal(article)
+func Get() {
+	//open ./data.json and unmarshall it
+	file, err := os.Open(Path)
 	if err != nil {
-		fmt.Println("Erreur lors de la conversion en JSON :", err)
-		return
+		log.Fatal(err)
+	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(file)
+
+	//unmarshall the json file
+	err = json.NewDecoder(file).Decode(&articles)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func PostArticle(article Article) {
+	Get()
+	articles = append(articles, article)
+
+	jsonData, err := json.Marshal(articles)
+	if err != nil {
+		panic(err)
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(articleJson))
+	//open ./data.json and write the new json
+	file, err := os.OpenFile(Path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
-		fmt.Println("Erreur lors de la création de la requête :", err)
-		return
+		log.Fatal(err)
 	}
-	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	_, err = io.Copy(file, bytes.NewReader(jsonData))
 	if err != nil {
-		fmt.Println("Erreur lors de la requête :", err)
-		return
+		log.Fatal(err)
 	}
-	defer resp.Body.Close()
-
-	fmt.Println(resp.Status)
 }
