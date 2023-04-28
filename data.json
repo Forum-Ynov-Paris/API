@@ -4,6 +4,8 @@
     "tag": "animaux",
     "content": "Je me demandais si les chats ont la capacité de jouer au ping-pong. J'ai un chat très agile et je pense qu'il pourrait être un joueur redoutable ! Qu'en pensez-vous ?",
     "uuid": "1234567890",
+    "upvote": 0,
+    "date": "2021-09-01T00:00:00.000Z",
     "commentaire": [
       {
         "content": "Je ne sais pas si les chats peuvent jouer au ping-pong, mais je suis sûr que ce serait amusant à regarder !",
@@ -24,6 +26,8 @@
     "tag": "alimentation",
     "content": "Je suis un grand amateur de fromage, mais je me demande si le fromage est meilleur avec ou sans trous. Quelle est votre opinion ?",
     "uuid": "0987654321",
+    "upvote": 0,
+    "date": "2021-09-01T00:00:00.000Z",
     "commentaire": [
       {
         "content": "Je préfère le fromage sans trous car il est plus crémeux et plus savoureux.",
@@ -44,6 +48,8 @@
     "tag": "sport",
     "content": "Je suis un grand fan de vélo et j'aime aussi nager. Je me demandais s'il était possible de faire du vélo sous l'eau. Quelqu'un a-t-il déjà essayé ?",
     "uuid": "4567890123",
+    "upvote": 0,
+    "date": "2021-09-01T00:00:00.000Z",
     "commentaire": [
       {
         "content": "Je ne pense pas que ce soit possible de faire du vélo sous l'eau, mais vous pourriez essayer de faire du vélo dans une piscine avec un vélo aquatique !",
